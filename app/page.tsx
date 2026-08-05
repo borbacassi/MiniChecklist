@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import Card from "./components/card";
-
+import { DateCard } from "@/types/dateCard";
 
 export default function Home(){
 
-  const [dates, setDates] = useState([])
+  const [dates, setDates] = useState<DateCard[]>([])
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novaDescr, setNovaDescr] = useState("");
   const [novaData, setNovaData] = useState("")
@@ -21,7 +21,6 @@ export default function Home(){
   carregarDates();
               }, []);
 
-  
   async function criarDate(){
       const novoDate = {
       titulo: novoTitulo,
@@ -61,19 +60,9 @@ export default function Home(){
     
   }
 
-
- 
-
-
-
- 
-
-  
-  
-  
-  
  async function toggleFeito(id: string) {
   const dateAtual = dates.find((d) => d.id === id);
+  if (!dateAtual) return; // se não achou, não faz nada
   const novoValor = !dateAtual.feito;
 
   const { error } = await supabase
