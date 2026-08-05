@@ -1,69 +1,63 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import Card from "./components/card";
 
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+
+export default function Home(){
+  const dataExample = [
+  { id: "qwoijew",
+    titulo: "primeiro date",
+    feito: true,
+    descricao: "primeiro dasdwte oxi",
+    data: "2026-05-31",
+    imgs: ["https://i.pinimg.com/736x/f1/7a/bd/f17abda8d87c5044da38156a79b34eb3.jpg"]
+
+}]
+
+
+  const [dates, setDates] = useState(dataExample)
+  function toggleFeito(id:string){ 
+    setDates(
+      dates.map(
+        (d) => d.id === id ?  
+        { ...d, feito: !d.feito } : d
+      )
+    );
+  };
+  
+  
+  const [novoTitulo, setNovoTitulo] = useState("");
+  const [novaDescr, setNovaDescr] = useState("");
+  const [novaData, setNovaData] = useState("")
+
+  function criarDate(){
+    const novoDate = {
+    id: crypto.randomUUID(),
+    titulo: novoTitulo,
+    descricao: novaDescr,
+    data: novaData,
+    imgs: [],
+    feito: false
+  }
+  setDates([...dates,novoDate])
+  setNovoTitulo("");
+  setNovaDescr("");
+  setNovaData("");
+}
+  return(
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+  <div className="flex gap-2 bg-white p-4 rounded-xl shadow">
+    <input className="border rounded px-3 py-2 flex-1" type="text" value={novoTitulo} onChange={(e) => setNovoTitulo(e.target.value)} />
+    <input className="border rounded px-3 py-2 flex-1" type="text" value={novaDescr} onChange={(e) => setNovaDescr(e.target.value)} />
+    <input className="border rounded px-3 py-2 flex-1" type="text" value={novaData} onChange={(e) => setNovaData(e.target.value)} />
+    <button className="bg-rose-500 text-white px-4 py-2 rounded hover:bg-rose-600" onClick={criarDate}>Adicionar</button>
+  </div>
+  <div className="space-y-4">
+    {dates.map((d) => (
+      <Card key={d.id} date={d} onToggle={() => toggleFeito(d.id)} />
+    ))}
+  </div>
+</div>
+  )
 }
