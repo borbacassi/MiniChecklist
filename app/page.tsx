@@ -5,18 +5,7 @@ import Card from "./components/card";
 
 
 export default function Home(){
-  const dataExample = [
-  { id: "qwoijew",
-    titulo: "primeiro date",
-    feito: true,
-    descricao: "primeiro dasdwte oxi",
-    data: "2026-05-31",
-    imgs: ["https://i.pinimg.com/736x/f1/7a/bd/f17abda8d87c5044da38156a79b34eb3.jpg"]
-
-}]
-
-
-  const [dates, setDates] = useState(dataExample)
+  const [dates, setDates] = useState([])
   function toggleFeito(id:string){ 
     setDates(
       dates.map(
@@ -25,6 +14,17 @@ export default function Home(){
       )
     );
   };
+ useEffect(() => {
+  async function carregarDates() {
+    const { data, error } = await supabase.from("datecards").select("*");
+    if (error) {
+      console.error(error);
+      return;
+    }
+    setDates(data);
+  }
+  carregarDates();
+}, []);
   
   
   const [novoTitulo, setNovoTitulo] = useState("");
