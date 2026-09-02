@@ -97,7 +97,7 @@ export default function MiniCalendar({ value, onChange, className = "" }: MiniCa
 
       {aberto && (
         <div
-          className="absolute z-50 mt-1 w-64 rounded-md border border-gray-300 bg-white shadow-lg p-3"
+          className="absolute z-50 mt-1 w-64 max-w-[85vw] rounded-md border border-gray-300 bg-white shadow-lg p-3"
           style={{ fontFamily: "inherit" }}
         >
           {/* Cabeçalho: mês/ano + navegação */}

@@ -4,32 +4,18 @@ import { supabase } from "@/lib/supabase";
 import Card from "../components/card";
 import { DateCard } from "@/types/dateCard";
 import { Doodles } from "../components/doodles";
-import MiniCalendar from "../components/minicalendar";
 
-function hoje(): string {
-  const d = new Date();
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
-
-function gerarNomeArquivo(id: string, file: File): string {
-  return `${id}/${Date.now()}-${file.name}`;
-}
-
-export default function Lista() {
+export default function Recordacoes() {
   const gif = "/gifs/heart.gif";
   const [dates, setDates] = useState<DateCard[]>([]);
-  const [novoTitulo, setNovoTitulo] = useState("");
-  const [novaDescr, setNovaDescr] = useState("");
-  const [novaDataAdd, setNovaDataAdd] = useState(hoje());
-  const [novaDataFeito, setNovaDataFeito] = useState(hoje());
 
   useEffect(() => {
     async function carregarDates() {
       const { data, error } = await supabase
         .from("datecards")
         .select("*")
-        .eq("feito", false);
+        .eq("feito", true)
+        .order("dataFeito", { ascending: false });
       if (error) {
         console.error(error);
         return;
@@ -38,28 +24,6 @@ export default function Lista() {
     }
     carregarDates();
   }, []);
-
-  async function criarDate() {
-    if (!novoTitulo.trim()) return;
-    const novoDate = {
-      titulo: novoTitulo,
-      descricao: novaDescr,
-      dataAdd: novaDataAdd,
-      dataFeito: novaDataFeito,
-      imgs: [],
-      feito: false,
-    };
-    const { data, error } = await supabase.from("datecards").insert([novoDate]).select();
-    if (error) {
-      console.error(error);
-      return;
-    }
-    setDates([...dates, data[0]]);
-    setNovoTitulo("");
-    setNovaDescr("");
-    setNovaDataAdd(hoje());
-    setNovaDataFeito(hoje());
-  }
 
   async function deleteDate(id: string) {
     const { error } = await supabase.from("datecards").delete().eq("id", id);
@@ -79,8 +43,8 @@ export default function Lista() {
       console.error(error);
       return;
     }
-    // Marcado como feito -> some de /lista (agora vive em /recordacoes)
-    if (novoValor) {
+    // Desmarcado como feito -> some de /recordacoes (volta a viver em /lista)
+    if (!novoValor) {
       setDates(dates.filter((d) => d.id !== id));
     } else {
       setDates(dates.map((d) => (d.id === id ? { ...d, feito: novoValor } : d)));
@@ -100,7 +64,7 @@ export default function Lista() {
   }
 
   async function adicionarImagem(id: string, file: File) {
-    const nomeArquivo = gerarNomeArquivo(id, file);
+    const nomeArquivo = `${id}/${Date.now()}-${file.name}`;
 
     const { error: erroUpload } = await supabase.storage
       .from("date-images")
@@ -168,71 +132,25 @@ export default function Lista() {
 
       <main className="flex-1 max-w-4xl mx-auto pt-6 pb-20 px-3 sm:px-6">
         <h1 className="drip-title text-2xl sm:text-3xl md:text-4xl text-center font-bold">
-          Dates antes do Casório
+          Recordações
         </h1>
 
-        {/* Formulario / Janela Retro */}
-        <div className="webcore-window w-full">
-          <div className="webcore-titlebar">novo-date.exe</div>
-          <div className="flex flex-col gap-2 p-3">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                className="webcore-input flex-1 min-w-0"
-                type="text"
-                value={novoTitulo}
-                onChange={(e) => setNovoTitulo(e.target.value)}
-                placeholder="Título"
+        <div className="w-full space-y-4 mt-6">
+          {dates.length === 0 ? (
+            <p className="text-center text-gray-500">Nenhuma recordação ainda.</p>
+          ) : (
+            dates.map((d) => (
+              <Card
+                key={d.id}
+                date={d}
+                onToggle={() => toggleFeito(d.id)}
+                onDelete={() => deleteDate(d.id)}
+                onAddImage={(file) => adicionarImagem(d.id, file)}
+                onRemoveImage={(url) => removerImagem(d.id, url)}
+                onEdit={(updates) => editarDate(d.id, updates)}
               />
-              <input
-                className="webcore-input flex-1 min-w-0"
-                type="text"
-                value={novaDescr}
-                onChange={(e) => setNovaDescr(e.target.value)}
-                placeholder="Descrição"
-              />
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="flex-1 flex flex-col gap-1 min-w-0">
-                <label className="text-xs text-gray-600">Adicionado em</label>
-                <MiniCalendar
-                  className="webcore-input w-full"
-                  value={novaDataAdd}
-                  onChange={setNovaDataAdd}
-                />
-              </div>
-              <div className="flex-1 flex flex-col gap-1 min-w-0">
-                <label className="text-xs text-gray-600">Realizado em</label>
-                <MiniCalendar
-                  className="webcore-input w-full"
-                  value={novaDataFeito}
-                  onChange={setNovaDataFeito}
-                />
-              </div>
-            </div>
-
-            <button
-              className="webcore-button whitespace-nowrap self-end"
-              onClick={criarDate}
-            >
-              + adicionar
-            </button>
-          </div>
-        </div>
-
-        {/* Lista de Cards */}
-        <div className="w-full space-y-4">
-          {dates.map((d) => (
-            <Card
-              key={d.id}
-              date={d}
-              onToggle={() => toggleFeito(d.id)}
-              onDelete={() => deleteDate(d.id)}
-              onAddImage={(file) => adicionarImagem(d.id, file)}
-              onRemoveImage={(url) => removerImagem(d.id, url)}
-              onEdit={(updates) => editarDate(d.id, updates)}
-            />
-          ))}
+            ))
+          )}
         </div>
       </main>
 

@@ -32,13 +32,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex items-stretch">
-      <aside className="w-48 shrink-0">
+      <aside className="shrink-0">
         <Doodles side="left" gifUrl={gif} />
       </aside>
 
-      <main className="flex-1 max-w-4xl mx-auto pt-6 pb-20 px-6 flex flex-col gap-8">
+      <main className="flex-1 max-w-4xl mx-auto pt-6 pb-20 px-3 sm:px-6 flex flex-col gap-8">
         {/* Título */}
-        <h1 className="drip-title text-3xl sm:text-4xl text-center font-bold">
+        <h1 className="drip-title text-2xl sm:text-3xl md:text-4xl text-center font-bold">
           Dates antes do Casório
         </h1>
 
@@ -68,7 +68,7 @@ export default function Home() {
         </div>
       </main>
 
-      <aside className="w-48 shrink-0">
+      <aside className="shrink-0">
         <Doodles side="right" gifUrl={gif} />
       </aside>
     </div>

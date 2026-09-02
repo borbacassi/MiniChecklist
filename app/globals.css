@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background-color: #fff;
   background-image: radial-gradient(circle, #b7dae2 22%, transparent 23%);
@@ -56,4 +61,15 @@ body {
   background-clip: text;
   -webkit-text-stroke: 1.5px #4a000a;
   text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.splash-text {
+  font-family: Georgia, serif;
+  font-weight: 900;
+  font-style: italic;
+  color: #2a94f7;
+  -webkit-text-stroke: 0.6px #022347;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  transform: rotate(-30deg);
 }

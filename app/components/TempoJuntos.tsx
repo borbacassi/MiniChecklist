@@ -69,22 +69,32 @@ export default function TempoJuntos() {
   ];
 
   return (
-    <div className="webcore-window w-full max-w-2xl mx-auto rounded-3xl overflow-hidden">
-      <div className="webcore-titlebar rounded-t-3xl">contador.exe</div>
-      <div className="flex flex-col items-center gap-3 p-6">
-        <h2 className="text-lg sm:text-xl font-bold text-center">Tempo juntos</h2>
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-          {unidades.map((u) => (
-            <div
-              key={u.label}
-              className="flex flex-col items-center justify-center bg-white/70 rounded-2xl px-3 py-2 min-w-[60px] shadow-sm"
-            >
-              <span className="text-2xl sm:text-3xl font-bold tabular-nums">{u.valor}</span>
-              <span className="text-xs uppercase text-gray-600">{u.label}</span>
-            </div>
-          ))}
+    <div className="relative w-full max-w-2xl mx-auto">
+      <div className="webcore-window rounded-3xl overflow-hidden">
+        <div className="webcore-titlebar rounded-t-3xl">contador.exe</div>
+        <div className="flex flex-col items-center gap-3 p-6">
+          <h2 className="text-lg sm:text-xl font-bold text-center">Tempo juntos</h2>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+            {unidades.map((u) => (
+              <div
+                key={u.label}
+                className="flex flex-col items-center justify-center bg-white/70 rounded-2xl px-3 py-2 min-w-[60px] shadow-sm"
+              >
+                <span className="text-2xl sm:text-3xl font-bold tabular-nums">{u.valor}</span>
+                <span className="text-xs uppercase text-gray-600">{u.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
+
+      {/* Splash estilo Minecraft, cruzando o canto do card */}
+      <span
+        className="splash-text pointer-events-none select-none absolute - bottom-1 right-1 sm:right-1 text-base sm:text-lg"
+        aria-hidden="true"
+      >
+        que tempão hein ! ! !
+      </span>
     </div>
   );
 }
