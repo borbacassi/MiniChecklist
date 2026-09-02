@@ -19,6 +19,8 @@ function gerarNomeArquivo(id: string, file: File): string {
 export default function Lista() {
   const gif = "/gifs/heart.gif";
   const [dates, setDates] = useState<DateCard[]>([]);
+  
+  // Estados do formulário
   const [novoTitulo, setNovoTitulo] = useState("");
   const [novaDescr, setNovaDescr] = useState("");
   const [novaDataAdd, setNovaDataAdd] = useState(hoje());
@@ -55,6 +57,8 @@ export default function Lista() {
       return;
     }
     setDates([...dates, data[0]]);
+    
+    // Limpar o formulário após criar
     setNovoTitulo("");
     setNovaDescr("");
     setNovaDataAdd(hoje());
@@ -161,82 +165,74 @@ export default function Lista() {
   }
 
   return (
-    <div className="min-h-screen flex items-stretch">
-      <aside className="shrink-0">
+    <div className="max-w-screen flex items-stretch overflow-x-hidden">
+      <aside className="hidden md:block shrink-0 w-48">
         <Doodles side="left" gifUrl={gif} />
       </aside>
 
-      <main className="flex-1 max-w-4xl mx-auto pt-6 pb-20 px-3 sm:px-6">
+      <main className="flex-1 w-full max-w-4xl mx-auto pt-6 pb-20 px-4 sm:px-6">
         <h1 className="drip-title text-2xl sm:text-3xl md:text-4xl text-center font-bold">
-          Dates antes do Casório
+          Lista de Dates
         </h1>
 
-        {/* Formulario / Janela Retro */}
-        <div className="webcore-window w-full">
-          <div className="webcore-titlebar">novo-date.exe</div>
-          <div className="flex flex-col gap-2 p-3">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <input
-                className="webcore-input flex-1 min-w-0"
-                type="text"
-                value={novoTitulo}
-                onChange={(e) => setNovoTitulo(e.target.value)}
-                placeholder="Título"
-              />
-              <input
-                className="webcore-input flex-1 min-w-0"
-                type="text"
-                value={novaDescr}
-                onChange={(e) => setNovaDescr(e.target.value)}
-                placeholder="Descrição"
-              />
-            </div>
-
+        {/* FORMULÁRIO DE CRIAÇÃO RESTAURADO */}
+        <div className="webcore-window w-full mt-6 mb-8">
+          <div className="webcore-titlebar">novo_date.exe</div>
+          <div className="p-3 space-y-3" style={{ fontFamily: "'Silkscreen', monospace", fontSize: "12px" }}>
+            <input
+              className="webcore-input w-full"
+              type="text"
+              placeholder="Título do date..."
+              value={novoTitulo}
+              onChange={(e) => setNovoTitulo(e.target.value)}
+            />
+            <input
+              className="webcore-input w-full"
+              type="text"
+              placeholder="Descrição ou ideias..."
+              value={novaDescr}
+              onChange={(e) => setNovaDescr(e.target.value)}
+            />
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="flex-1 flex flex-col gap-1 min-w-0">
                 <label className="text-xs text-gray-600">Adicionado em</label>
-                <MiniCalendar
-                  className="webcore-input w-full"
-                  value={novaDataAdd}
-                  onChange={setNovaDataAdd}
-                />
+                <MiniCalendar className="webcore-input w-full" value={novaDataAdd} onChange={setNovaDataAdd} />
               </div>
               <div className="flex-1 flex flex-col gap-1 min-w-0">
-                <label className="text-xs text-gray-600">Realizado em</label>
-                <MiniCalendar
-                  className="webcore-input w-full"
-                  value={novaDataFeito}
-                  onChange={setNovaDataFeito}
-                />
+                <label className="text-xs text-gray-600">Planejado para</label>
+                <MiniCalendar className="webcore-input w-full" value={novaDataFeito} onChange={setNovaDataFeito} />
               </div>
             </div>
-
-            <button
-              className="webcore-button whitespace-nowrap self-end"
+            <button 
+              className="webcore-button w-full mt-2"
               onClick={criarDate}
             >
-              + adicionar
+              Adicionar à Lista
             </button>
           </div>
         </div>
 
-        {/* Lista de Cards */}
-        <div className="w-full space-y-4">
-          {dates.map((d) => (
-            <Card
-              key={d.id}
-              date={d}
-              onToggle={() => toggleFeito(d.id)}
-              onDelete={() => deleteDate(d.id)}
-              onAddImage={(file) => adicionarImagem(d.id, file)}
-              onRemoveImage={(url) => removerImagem(d.id, url)}
-              onEdit={(updates) => editarDate(d.id, updates)}
-            />
-          ))}
+        {/* LISTA DE CARDS */}
+        <div className="w-full flex flex-col gap-6">
+          {dates.length === 0 ? (
+            <p className="text-center text-gray-500">Nenhum date planejado no momento.</p>
+          ) : (
+            dates.map((d) => (
+              <Card
+                key={d.id}
+                date={d}
+                onToggle={() => toggleFeito(d.id)}
+                onDelete={() => deleteDate(d.id)}
+                onAddImage={(file) => adicionarImagem(d.id, file)}
+                onRemoveImage={(url) => removerImagem(d.id, url)}
+                onEdit={(updates) => editarDate(d.id, updates)}
+              />
+            ))
+          )}
         </div>
       </main>
 
-      <aside className="shrink-0">
+      <aside className="hidden md:block shrink-0 w-48">
         <Doodles side="right" gifUrl={gif} />
       </aside>
     </div>

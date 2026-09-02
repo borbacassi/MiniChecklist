@@ -125,7 +125,7 @@ export default function Recordacoes() {
   }
 
   return (
-    <div className="min-h-screen flex items-stretch">
+    <div className="max-w-screen flex items-stretch">
       <aside className="shrink-0">
         <Doodles side="left" gifUrl={gif} />
       </aside>

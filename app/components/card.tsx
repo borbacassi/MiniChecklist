@@ -83,15 +83,18 @@ export default function Card({ date, onToggle, onDelete, onAddImage, onRemoveIma
   }
 
   return (
-    <div className="webcore-window">
+    <div className="webcore-window w-full">
       <div className="webcore-titlebar">{date.titulo || "sem-titulo"}.date</div>
-      <div className="p-3 space-y-2" style={{ fontFamily: "'Silkscreen', monospace", fontSize: "12px" }}>
-        <div className="flex flex-wrap gap-2 items-center">
+      <div className="p-3 space-y-4" style={{ fontFamily: "'Silkscreen', monospace", fontSize: "12px" }}>
+        
+        {/* CONTÊINER DAS IMAGENS ATUALIZADO */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-2 w-full items-center">
           {(date.imgs ?? []).map((foto, index) => (
-            <div key={index} className="relative w-1/3 aspect-square">
+            <div key={index} className="relative w-full aspect-square">
               <img
                 src={foto}
                 className="w-full h-full object-cover border border-black"
+                alt="Recordação"
               />
               {onRemoveImage && (
                 <button
@@ -113,7 +116,7 @@ export default function Card({ date, onToggle, onDelete, onAddImage, onRemoveIma
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 disabled={enviando}
-                className="w-1/3 aspect-square flex items-center justify-center border border-dashed border-black text-3xl text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+                className="w-full aspect-square flex items-center justify-center border border-dashed border-black text-3xl text-gray-500 hover:bg-gray-100 disabled:opacity-50"
                 title="Adicionar imagem"
               >
                 {enviando ? "..." : "+"}
@@ -157,11 +160,11 @@ export default function Card({ date, onToggle, onDelete, onAddImage, onRemoveIma
             </div>
           </div>
         ) : (
-          <>
+          <div className="space-y-1">
             <p>{date.descricao}</p>
             <p className="text-gray-600">Adicionado em: {date.dataAdd}</p>
             <p className="text-gray-600">Realizado em: {date.dataFeito}</p>
-          </>
+          </div>
         )}
 
         <div className="flex items-center justify-between pt-2">
